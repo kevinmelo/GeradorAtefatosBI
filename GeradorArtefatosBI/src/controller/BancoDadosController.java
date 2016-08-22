@@ -17,7 +17,7 @@ public class BancoDadosController {
 			return false;
 		}
 		try {
-			con = DriverManager.getConnection(bd.getJdbcUrl());
+			con = DriverManager.getConnection(bd.getJdbcUrl(), bd.getUsuario(), bd.getSenha());
 //			Statement stmt = con.createStatement();
 		} catch (SQLException e) {
 			return false;

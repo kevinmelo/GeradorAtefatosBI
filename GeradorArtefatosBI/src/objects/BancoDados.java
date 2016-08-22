@@ -49,5 +49,10 @@ public class BancoDados implements Serializable {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+	
+	@Override
+	public String toString() {
+		return nome.toString();
+	}
 
 }
