@@ -2,7 +2,7 @@ package objects;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class BancoDados implements Serializable {
+public class ConexaoDB implements Serializable {
 
 	private String nome = "";
 	private String jdbcDrive = "";
