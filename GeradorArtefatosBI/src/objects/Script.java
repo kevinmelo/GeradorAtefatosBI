@@ -8,6 +8,7 @@ import java.util.List;
 public class Script implements Serializable {
 
 	private String tabela = "";
+	private String schema = "";
 	private List<String> colunas = new ArrayList<>();
 
 	public String getTabela() {
@@ -16,6 +17,14 @@ public class Script implements Serializable {
 
 	public void setTabela(String tabela) {
 		this.tabela = tabela;
+	}
+
+	public String getSchema() {
+		return schema;
+	}
+
+	public void setSchema(String schema) {
+		this.schema = schema;
 	}
 
 	public List<String> getColunas() {
@@ -28,6 +37,15 @@ public class Script implements Serializable {
 
 	public void setColunas(List<String> colunas) {
 		this.colunas = colunas;
+	}
+
+	public String getColuna(int index) {
+		return colunas.get(index);
+	}
+
+	@Override
+	public String toString() {
+		return tabela;
 	}
 
 }

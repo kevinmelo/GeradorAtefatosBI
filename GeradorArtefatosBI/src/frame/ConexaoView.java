@@ -73,7 +73,7 @@ public class ConexaoView extends JFrame {
 	@SuppressWarnings("unchecked")
 	public ConexaoView() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ConexaoView.class.getResource("/resources/univali.png")));
-		bancoDadosList = (List<ConexaoDB>) controller.lerArquivo(1);
+		bancoDadosList = (List<ConexaoDB>) Controller.lerArquivo(1);
 		conexaoView = this;
 		initComponents();
 		createEvents();
@@ -88,7 +88,7 @@ public class ConexaoView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		btnAvancar = new JButton("Avan\u00E7ar");
+		btnAvancar = new JButton("Concluir");
 		btnAvancar.setPreferredSize(new Dimension(90, 23));
 		btnAvancar.setEnabled(false);
 
