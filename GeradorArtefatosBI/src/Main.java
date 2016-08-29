@@ -1,6 +1,6 @@
 import javax.swing.UIManager;
 
-import frame.ConexaoView;
+import frame.ScriptView;
 
 public class Main {
 
@@ -10,7 +10,7 @@ public class Main {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		ConexaoView conexaoView = new ConexaoView();
-		conexaoView.setVisible(true);
+		ScriptView view = new ScriptView();
+		view.setVisible(true);
 	}
 }

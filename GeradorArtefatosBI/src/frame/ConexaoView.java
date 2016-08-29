@@ -15,6 +15,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
@@ -29,7 +30,7 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class ConexaoView extends JFrame {
+public class ConexaoView extends JDialog {
 
 	private List<ConexaoDB> bancoDadosList = new ArrayList<>();
 	private Controller controller = new Controller();
@@ -40,11 +41,12 @@ public class ConexaoView extends JFrame {
 	private JTextField usuarioText;
 	private JPasswordField senhaText;
 	private JButton btnSalvar;
-	private JButton btnAvancar;
+	private JButton btnConcluir;
 	private JComboBox<ConexaoDB> comboBox;
 	private int selectIndex = -1;
 	private JButton btnDelete;
 	private ConexaoView conexaoView;
+	private JButton btnCancel;
 
 	/**
 	 * Launch the application.
@@ -82,20 +84,20 @@ public class ConexaoView extends JFrame {
 	// INIT COMPONENTS --------------------------------------------
 	private void initComponents() {
 		setTitle("Conexao");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		btnAvancar = new JButton("Concluir");
-		btnAvancar.setPreferredSize(new Dimension(90, 23));
-		btnAvancar.setEnabled(false);
+		btnConcluir = new JButton("Concluir");
+		btnConcluir.setPreferredSize(new Dimension(90, 23));
+		btnConcluir.setEnabled(false);
 
 		comboBox = new JComboBox<ConexaoDB>();
 		atualizaComboBox();
 
-		JLabel lblNewLabel = new JLabel("Selecione um banco:");
+		JLabel lblNewLabel = new JLabel("Selecione uma conex\u00E3o:");
 
 		JSeparator separator = new JSeparator();
 
@@ -138,26 +140,31 @@ public class ConexaoView extends JFrame {
 		btnDelete.setPreferredSize(new Dimension(90, 23));
 		btnDelete.setEnabled(false);
 
+		btnCancel = new JButton("Cancelar");
+		btnCancel.setPreferredSize(new Dimension(90, 23));
+
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
 				.createSequentialGroup().addContainerGap()
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(separator_1, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(comboBox, 0, 338, Short.MAX_VALUE))
+								.addComponent(comboBox, 0, 318, Short.MAX_VALUE))
 						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
-						.addComponent(btnAvancar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblSenha, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-										.addComponent(lblUsurio, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-										.addComponent(lblJdbcUrl, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-										.addComponent(lblJdbcDrive, GroupLayout.DEFAULT_SIZE, 83,
-												Short.MAX_VALUE)
-										.addComponent(lblNome, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
+								.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
+								.addComponent(btnConcluir, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup().addGroup(gl_contentPane
+								.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(lblSenha, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblUsurio, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblJdbcUrl, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblJdbcDrive, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNome, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
 								.addGap(10)
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 										.addComponent(senhaText, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
@@ -174,8 +181,7 @@ public class ConexaoView extends JFrame {
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
+								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 										GroupLayout.PREFERRED_SIZE))
 						.addGap(11).addComponent(separator, GroupLayout.PREFERRED_SIZE, 3, GroupLayout.PREFERRED_SIZE)
@@ -213,8 +219,12 @@ public class ConexaoView extends JFrame {
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnAvancar,
-								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)));
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnConcluir, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE))));
 		contentPane.setLayout(gl_contentPane);
 	}
 
@@ -296,7 +306,7 @@ public class ConexaoView extends JFrame {
 					senhaText.setText(bd.getSenha());
 
 					btnDelete.setEnabled(true);
-					btnAvancar.setEnabled(true);
+					btnConcluir.setEnabled(true);
 				} else {
 					nomeText.setText("");
 					jdbcUrlText.setText("");
@@ -319,17 +329,65 @@ public class ConexaoView extends JFrame {
 				senhaText.setText("");
 
 				btnDelete.setEnabled(false);
-				btnAvancar.setEnabled(false);
+				btnConcluir.setEnabled(false);
 
 				controller.escreveArquivo(bancoDadosList);
 				atualizaComboBox();
 			}
 		});
 
-		btnAvancar.addActionListener(new ActionListener() {
+		btnConcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ScriptView scriptView = new ScriptView();
-				scriptView.setVisible(true);
+				if (camposValidos()) {
+					ConexaoDB bd = new ConexaoDB();
+
+					bd.setNome(nomeText.getText());
+					bd.setJdbcDrive(jdbcDriveText.getText());
+					bd.setJdbcUrl(jdbcUrlText.getText());
+					bd.setUsuario(usuarioText.getText());
+					bd.setSenha(String.valueOf(senhaText.getPassword()));
+
+					if (controller.validaConexao(bd)) {
+						if (selectIndex == -1) {
+							JOptionPane.showMessageDialog(null, "Conexão banco salvo com sucesso!");
+							bancoDadosList.add(bd);
+						} else {
+							JOptionPane.showMessageDialog(null, "Conexão banco atualizado com sucesso!");
+							bancoDadosList.set(selectIndex, bd);
+						}
+
+						controller.escreveArquivo(bancoDadosList);
+						atualizaComboBox();
+					} else {
+						JOptionPane.showMessageDialog(null, "Não foi possivel conectar com o banco!");
+					}
+				}
+				conexaoView.dispose();
+			}
+
+			private boolean camposValidos() {
+				if (nomeText.getText().isEmpty()) {
+					return false;
+				}
+
+				if (jdbcDriveText.getText().isEmpty()) {
+					return false;
+				}
+
+				if (jdbcUrlText.getText().isEmpty()) {
+					return false;
+				}
+
+				if (usuarioText.getText().isEmpty()) {
+					return false;
+				}
+
+				return true;
+			}
+		});
+
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				conexaoView.dispose();
 			}
 		});

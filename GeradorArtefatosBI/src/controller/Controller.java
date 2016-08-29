@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 import javax.swing.filechooser.FileFilter;
 
 import objects.ConexaoDB;
-import objects.Script;
+import objects.Table;
 
 public class Controller {
 
@@ -73,11 +73,20 @@ public class Controller {
 		return new ArrayList<>();
 	}
 
-	public static FileFilter getFileFilter() {
+	public static FileFilter getFileFilter(int type) {
 		return new FileFilter() {
 			@Override
 			public String getDescription() {
-				return "SQL Files";
+				switch (type) {
+				case 1:
+					return "SQL Files";
+
+				case 2:
+					return "XML Files";
+
+				default:
+					return "Todos";
+				}
 			}
 
 			@Override
@@ -88,7 +97,7 @@ public class Controller {
 
 				String extension = Controller.getExtension(f);
 				if (extension != null) {
-					if (extension.equals("sql") || extension.equals("txt")) {
+					if (extension.equals("sql") || extension.equals("txt") || extension.equals("xml")) {
 						return true;
 					}
 				} else {
@@ -110,7 +119,7 @@ public class Controller {
 		return ext;
 	}
 
-	public static void readSqlFile(File file, List<Script> scripts) {
+	public static void readSqlFile(File file, List<Table> scripts) {
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(file);
@@ -118,14 +127,14 @@ public class Controller {
 			e.printStackTrace();
 		}
 		StringTokenizer st = null;
-		Script script = new Script();
+		Table script = new Table();
 		while (scanner.hasNextLine()) {
 			String lines = scanner.nextLine();
 			if (lines.startsWith("CREATE TABLE")) {
 				StringTokenizer st1 = new StringTokenizer(lines, "(");
 				if (!script.getTabela().isEmpty()) {
 					scripts.add(script);
-					script = new Script();
+					script = new Table();
 				}
 				script.setTabela(st1.nextToken().substring(13));
 			}
@@ -140,22 +149,22 @@ public class Controller {
 		}
 	}
 
-	public static void readDataBase(ConexaoDB conexao, List<Script> scripts) {
+	public static void readDataBase(ConexaoDB conexao, List<Table> scripts) {
 		try {
 			Connection con = DriverManager.getConnection(conexao.getJdbcUrl(), conexao.getUsuario(),
 					conexao.getSenha());
 			DatabaseMetaData meta = con.getMetaData();
-			ResultSet res = meta.getTables(null, null, null, new String[] { "TABLE" });
+			ResultSet res = meta.getTables(null, con.getSchema(), null, new String[] { "TABLE" });
 
 			while (res.next()) {
-				Script script = new Script();
+				Table script = new Table();
 				script.setTabela(res.getString("TABLE_NAME"));
 				script.setSchema(res.getString("TABLE_SCHEM"));
 				scripts.add(script);
 			}
 			res.close();
 
-			for (Script s : scripts) {
+			for (Table s : scripts) {
 				res = meta.getColumns(null, s.getSchema(), s.getTabela(), null);
 				while (res.next()) {
 					s.setColunas(res.getString("COLUMN_NAME"));

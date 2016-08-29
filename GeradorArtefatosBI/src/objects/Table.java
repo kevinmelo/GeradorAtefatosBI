@@ -5,11 +5,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class Script implements Serializable {
+public class Table implements Serializable {
 
 	private String tabela = "";
 	private String schema = "";
-	private List<String> colunas = new ArrayList<>();
+	private boolean isCube = false;
+	private List<String> columns = new ArrayList<>();
+
+	public boolean isCube() {
+		return isCube;
+	}
+
+	public void setCube() {
+		this.isCube = (isCube ? false : true);
+	}
+
+	public List<String> getColumns() {
+		return columns;
+	}
+
+	public void setColumns(List<String> columns) {
+		this.columns = columns;
+	}
 
 	public String getTabela() {
 		return tabela;
@@ -28,24 +45,23 @@ public class Script implements Serializable {
 	}
 
 	public List<String> getColunas() {
-		return colunas;
+		return columns;
 	}
 
 	public void setColunas(String coluna) {
-		this.colunas.add(coluna);
+		this.columns.add(coluna);
 	}
 
 	public void setColunas(List<String> colunas) {
-		this.colunas = colunas;
+		this.columns = colunas;
 	}
 
 	public String getColuna(int index) {
-		return colunas.get(index);
+		return columns.get(index);
 	}
 
 	@Override
 	public String toString() {
 		return tabela;
 	}
-
 }
