@@ -10,7 +10,7 @@ public class Table implements Serializable {
 	private String tabela = "";
 	private String schema = "";
 	private boolean isCube = false;
-	private List<String> columns = new ArrayList<>();
+	private List<Column> columns = new ArrayList<>();
 
 	public boolean isCube() {
 		return isCube;
@@ -20,12 +20,24 @@ public class Table implements Serializable {
 		this.isCube = (isCube ? false : true);
 	}
 
-	public List<String> getColumns() {
+	public List<Column> getColumns() {
 		return columns;
 	}
 
-	public void setColumns(List<String> columns) {
+	public Column getColumn(int index) {
+		return columns.get(index);
+	}
+
+	public void setColumns(List<Column> columns) {
 		this.columns = columns;
+	}
+
+	public void setColumn(Column column) {
+		this.columns.add(column);
+	}
+
+	public void removeColumn(int index) {
+		columns.remove(index);
 	}
 
 	public String getTabela() {
@@ -42,22 +54,6 @@ public class Table implements Serializable {
 
 	public void setSchema(String schema) {
 		this.schema = schema;
-	}
-
-	public List<String> getColunas() {
-		return columns;
-	}
-
-	public void setColunas(String coluna) {
-		this.columns.add(coluna);
-	}
-
-	public void setColunas(List<String> colunas) {
-		this.columns = colunas;
-	}
-
-	public String getColuna(int index) {
-		return columns.get(index);
 	}
 
 	@Override

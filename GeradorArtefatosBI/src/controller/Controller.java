@@ -18,13 +18,14 @@ import java.util.StringTokenizer;
 
 import javax.swing.filechooser.FileFilter;
 
+import objects.Column;
 import objects.ConexaoDB;
 import objects.Table;
 
 public class Controller {
 
 	private static final String CAMINHO_RESOURCES = "src" + File.separator + "resources";
-	private static final String ARQUIVO_BANCO_DADOS = "conexão.data";
+	private static final String FILE_CONNECTION = "conexão.data";
 
 	public boolean validaConexao(ConexaoDB bd) {
 		try {
@@ -44,8 +45,7 @@ public class Controller {
 		FileOutputStream fout;
 		ObjectOutputStream oout;
 		try {
-			fout = new FileOutputStream(
-					"." + File.separator + CAMINHO_RESOURCES + File.separator + ARQUIVO_BANCO_DADOS);
+			fout = new FileOutputStream("." + File.separator + CAMINHO_RESOURCES + File.separator + FILE_CONNECTION);
 			oout = new ObjectOutputStream(fout);
 			oout.writeObject(obj);
 		} catch (Exception e) {
@@ -61,8 +61,7 @@ public class Controller {
 		switch (fileIndex) {
 		case 1:
 			try {
-				fin = new FileInputStream(
-						"." + File.separator + CAMINHO_RESOURCES + File.separator + ARQUIVO_BANCO_DADOS);
+				fin = new FileInputStream("." + File.separator + CAMINHO_RESOURCES + File.separator + FILE_CONNECTION);
 				oin = new ObjectInputStream(fin);
 				return oin.readObject();
 			} catch (Exception e) {
@@ -138,12 +137,16 @@ public class Controller {
 				}
 				script.setTabela(st1.nextToken().substring(13));
 			}
+
 			st = new StringTokenizer(lines);
 
 			if (!lines.equals("") && lines.indexOf("CREATE") == -1 && lines.indexOf("ALTER") == -1
 					&& lines.indexOf("DROP") == -1 && !lines.equals("(") && !lines.equals(");")) {
 				if (lines.startsWith(" ") || !lines.startsWith(" ")) {
-					script.setColunas(st.nextToken());
+					Column column = new Column();
+					column.setName(st.nextToken());
+					column.setType(st.nextToken().replaceAll(",", ""));
+					script.setColumn(column);
 				}
 			}
 		}
@@ -167,7 +170,10 @@ public class Controller {
 			for (Table s : scripts) {
 				res = meta.getColumns(null, s.getSchema(), s.getTabela(), null);
 				while (res.next()) {
-					s.setColunas(res.getString("COLUMN_NAME"));
+					Column column = new Column();
+					column.setName(res.getString("COLUMN_NAME"));
+					column.setType(res.getString("TYPE_NAME"));
+					s.setColumn(column);
 				}
 			}
 		} catch (Exception e) {

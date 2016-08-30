@@ -4,10 +4,13 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import objects.Column;
 import objects.ConexaoDB;
 import objects.ListRender;
 import objects.Table;
@@ -37,6 +40,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.Color;
 import javax.swing.border.BevelBorder;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -48,21 +52,30 @@ public class ScriptView extends JFrame {
 	private JButton btnProcurar;
 	private JTextField filePathField;
 	private DefaultListModel<Table> tableModel = new DefaultListModel<>();
-	private DefaultListModel<String> columnModel = new DefaultListModel<>();
+	private JList<Table> tableList;
+	private DefaultListModel<Column> columnModel = new DefaultListModel<>();
+	private JList<Column> columnList = new JList<Column>();;
 	private JButton btnNovaConexo;
-	private JButton btnNewButton;
+	private JButton btnNext;
 	private JSeparator separator;
 
+	private JPopupMenu tablePopupMenu = new JPopupMenu();
+	private JRadioButtonMenuItem cubeMenuItem = new JRadioButtonMenuItem("Cubo");
+	private JMenuItem removeTableMenuItem = new JMenuItem("Remover");
+
+	private JPopupMenu columnPopupMenu = new JPopupMenu();
+	private JRadioButtonMenuItem measureMenuItem = new JRadioButtonMenuItem("Medida");
+	private JRadioButtonMenuItem primaryKeyMenuItem = new JRadioButtonMenuItem("Chave Primária");
+	private JMenuItem removeColumnMenuItem = new JMenuItem("Remover");
+
 	private int selectedTableIndex = -1;
+	private int selectedColumnIndex = -1;
 	private boolean isUpdating = false;
 
+	private ScriptView scriptView;
 	private List<Table> scripts = new ArrayList<>();
 	private List<ConexaoDB> bancoDadosList = new ArrayList<>();
-	private JList<Table> tabelaLista;
-	private JList<String> colunaLista;
 	private JComboBox<ConexaoDB> comboBox;
-	private JButton btnRemoveTable;
-	private JButton btnMarcarComoCubo;
 
 	/**
 	 * Launch the application.
@@ -88,16 +101,25 @@ public class ScriptView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	public ScriptView(List<Table> scripts) {
+		this.scripts = scripts;
+		initComponents();
+		createEvents();
+		updateTableList();
+		scriptView = this;
+	}
+
 	public ScriptView() {
 		initComponents();
 		createEvents();
+		scriptView = this;
 	}
 
 	private void initComponents() {
 		setTitle("Script");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ScriptView.class.getResource("/resources/univali.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 504, 468);
+		setBounds(100, 100, 597, 468);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -121,46 +143,35 @@ public class ScriptView extends JFrame {
 		btnNovaConexo = new JButton("Nova Conex\u00E3o");
 
 		comboBox = new JComboBox<ConexaoDB>();
-		atualizaComboBox();
+		updateComboBox();
 
-		btnNewButton = new JButton("Avan\u00E7ar");
-		btnNewButton.setPreferredSize(new Dimension(90, 23));
-		btnNewButton.setMinimumSize(new Dimension(90, 23));
+		btnNext = new JButton("Avan\u00E7ar");
+		btnNext.setPreferredSize(new Dimension(90, 23));
+		btnNext.setMinimumSize(new Dimension(90, 23));
 
 		separator = new JSeparator();
 
-		btnRemoveTable = new JButton("Remover tabela");
-
-		btnMarcarComoCubo = new JButton("Marcar como cubo");
-
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(btnProcurar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(filePathField, GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnRemoveTable, GroupLayout.DEFAULT_SIZE, 116,
-														Short.MAX_VALUE)
-												.addGap(15).addComponent(btnMarcarComoCubo, GroupLayout.DEFAULT_SIZE,
-														126, Short.MAX_VALUE)))
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(panel, GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
-						.addGroup(gl_contentPane.createSequentialGroup().addComponent(btnNovaConexo)
-								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addComponent(comboBox, 0, 345, Short.MAX_VALUE))
-						.addComponent(separator_1, GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
-						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE))
-				.addContainerGap()));
+		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(separator, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+										.addComponent(btnProcurar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addComponent(filePathField, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+										.addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(panel, GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
+								.addGroup(gl_contentPane.createSequentialGroup().addComponent(btnNovaConexo)
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(comboBox, 0, 438, Short.MAX_VALUE))
+								.addComponent(separator_1, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+								.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE))
+						.addContainerGap()));
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
 				.createSequentialGroup().addContainerGap()
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
@@ -173,25 +184,26 @@ public class ScriptView extends JFrame {
 						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(ComponentPlacement.UNRELATED)
 				.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 4, GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE).addGap(11)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(btnRemoveTable).addComponent(btnMarcarComoCubo)))
-						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup().addGap(6).addComponent(tablePanel,
+								GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup().addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(panel, GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)))
 				.addPreferredGap(ComponentPlacement.UNRELATED)
 				.addComponent(separator, GroupLayout.PREFERRED_SIZE, 4, GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE,
-						GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(ComponentPlacement.RELATED)
+				.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 				.addContainerGap()));
 
+		columnPopupMenu.add(primaryKeyMenuItem);
+		columnPopupMenu.add(measureMenuItem);
+		columnPopupMenu.add(removeColumnMenuItem);
+
 		JScrollPane colunaScrollPane = new JScrollPane();
-		colunaLista = new JList<String>();
-		colunaLista.setCellRenderer(new ListRender());
-		colunaLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		colunaLista.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		colunaScrollPane.setViewportView(colunaLista);
+		columnList.setCellRenderer(new ListRender());
+		columnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		columnList.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		colunaScrollPane.setViewportView(columnList);
 
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
@@ -204,12 +216,15 @@ public class ScriptView extends JFrame {
 						.addContainerGap()));
 		panel.setLayout(gl_panel);
 
+		tablePopupMenu.add(cubeMenuItem);
+		tablePopupMenu.add(removeTableMenuItem);
+
 		JScrollPane tabelaScrollPane = new JScrollPane();
-		tabelaLista = new JList<Table>();
-		tabelaLista.setCellRenderer(new ListRender());
-		tabelaLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tabelaLista.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tabelaScrollPane.setViewportView(tabelaLista);
+		tableList = new JList<Table>();
+		tableList.setCellRenderer(new ListRender());
+		tableList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableList.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		tabelaScrollPane.setViewportView(tableList);
 
 		GroupLayout gl_tablePanel = new GroupLayout(tablePanel);
 		gl_tablePanel.setHorizontalGroup(gl_tablePanel.createParallelGroup(Alignment.LEADING)
@@ -238,19 +253,9 @@ public class ScriptView extends JFrame {
 					filePathField.setText(file.getAbsolutePath());
 					Controller.readSqlFile(file, scripts);
 					tableModel = new DefaultListModel<>();
-					atualizaListaTabelas();
+					updateTableList();
 				} else {
 					filePathField.setText("");
-				}
-			}
-		});
-
-		tabelaLista.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (!tableModel.isEmpty() && !SwingUtilities.isRightMouseButton(e)) {
-					selectedTableIndex = tabelaLista.getSelectedIndex();
-					atualizaListaColunas();
 				}
 			}
 		});
@@ -260,7 +265,7 @@ public class ScriptView extends JFrame {
 				if (comboBox.getSelectedIndex() != -1 && !isUpdating) {
 					ConexaoDB bd = (ConexaoDB) comboBox.getSelectedItem();
 					Controller.readDataBase(bd, scripts);
-					atualizaListaTabelas();
+					updateTableList();
 				}
 			}
 		});
@@ -270,48 +275,134 @@ public class ScriptView extends JFrame {
 				ConexaoView conexaoView = new ConexaoView();
 				conexaoView.setModal(true);
 				conexaoView.setVisible(true);
-				atualizaComboBox();
+				updateComboBox();
 			}
 		});
 
-		btnRemoveTable.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (selectedTableIndex != -1) {
-					scripts.remove(selectedTableIndex);
-					atualizaListaTabelas();
-					columnModel = new DefaultListModel<>();
-					colunaLista.setModel(columnModel);
+		tableList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (!tableModel.isEmpty()) {
+					if (SwingUtilities.isRightMouseButton(e)) {
+						tablePopupMenu.show(e.getComponent(), e.getX(), e.getY());
+						tableList.setSelectedIndex(tableList.locationToIndex(e.getPoint()));
+						if (tableList.getSelectedValue().isCube()) {
+							cubeMenuItem.setSelected(true);
+						} else {
+							cubeMenuItem.setSelected(false);
+						}
+					}
+					selectedTableIndex = tableList.getSelectedIndex();
+					updateColumnList();
 				}
 			}
 		});
 
-		btnMarcarComoCubo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				tabelaLista.getSelectedValue().setCube();
-				tabelaLista.repaint();
+		cubeMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tableList.getSelectedValue().setCube();
+				tableList.repaint();
+			}
+		});
+
+		removeTableMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				scripts.remove(selectedTableIndex);
+				updateTableList();
+				columnModel = new DefaultListModel<>();
+				columnList.setModel(columnModel);
+			}
+		});
+
+		columnList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e) && !columnModel.isEmpty()) {
+					columnPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+					columnList.setSelectedIndex(columnList.locationToIndex(e.getPoint()));
+					if (columnList.getSelectedValue().isMeasure()) {
+						measureMenuItem.setSelected(true);
+					} else {
+						measureMenuItem.setSelected(false);
+					}
+					if (columnList.getSelectedValue().isPrimaryKey()) {
+						primaryKeyMenuItem.setSelected(true);
+					} else {
+						primaryKeyMenuItem.setSelected(false);
+					}
+				}
+				selectedColumnIndex = columnList.getSelectedIndex();
+			}
+		});
+
+		primaryKeyMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Column column = columnList.getSelectedValue();
+				if (column.isPrimaryKey()) {
+					column.setPrimaryKey(false);
+				} else {
+					column.setPrimaryKey(true);
+				}
+				column.setMeasure(false);
+				columnList.repaint();
+			}
+		});
+
+		measureMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Column column = columnList.getSelectedValue();
+				if (column.isMeasure()) {
+					column.setMeasure(false);
+				} else {
+					column.setMeasure(true);
+				}
+				column.setPrimaryKey(false);
+				columnList.repaint();
+			}
+		});
+
+		removeColumnMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				scripts.get(selectedTableIndex).removeColumn(selectedColumnIndex);
+				updateColumnList();
+			}
+		});
+
+		btnNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TemplateView template = new TemplateView(scripts);
+				template.setVisible(true);
+				scriptView.dispose();
 			}
 		});
 	}
 
-	private void atualizaListaTabelas() {
+	private void updateTableList() {
 		tableModel = new DefaultListModel<>();
 		for (Table s : scripts) {
 			tableModel.addElement(s);
 			columnModel = new DefaultListModel<>();
 		}
-		tabelaLista.setModel(tableModel);
+		tableList.setModel(tableModel);
 	}
 
-	private void atualizaListaColunas() {
+	private void updateColumnList() {
 		columnModel = new DefaultListModel<>();
-		for (String c : scripts.get(selectedTableIndex).getColunas()) {
+		for (Column c : scripts.get(selectedTableIndex).getColumns()) {
 			columnModel.addElement(c);
 		}
-		colunaLista.setModel(columnModel);
+		columnList.setModel(columnModel);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void atualizaComboBox() {
+	private void updateComboBox() {
 		bancoDadosList = (List<ConexaoDB>) Controller.lerArquivo(1);
 		comboBox.removeAllItems();
 		isUpdating = true;
