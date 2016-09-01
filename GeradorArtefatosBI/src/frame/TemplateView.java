@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.PlainDocument;
@@ -13,12 +12,6 @@ import org.bounce.text.LineNumberMargin;
 import org.bounce.text.xml.XMLEditorKit;
 import org.bounce.text.xml.XMLFoldingMargin;
 import org.bounce.text.xml.XMLStyleConstants;
-
-import com.northconcepts.datapipeline.core.Record;
-import com.northconcepts.datapipeline.core.RecordList;
-import com.northconcepts.datapipeline.job.Job;
-import com.northconcepts.datapipeline.memory.MemoryReader;
-import com.northconcepts.datapipeline.template.TemplateWriter;
 
 import controller.Controller;
 import objects.Column;
@@ -49,9 +42,9 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-@SuppressWarnings("serial")
 public class TemplateView extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnBack;
 	private JButton btnNext;
@@ -59,6 +52,9 @@ public class TemplateView extends JFrame {
 	private JTextField filePathField;
 	private JButton btnOpen;
 	private JButton btnSave;
+
+	private String path = "";
+	private File file = null;
 
 	private List<Table> scripts;
 	private TemplateView templateView;
@@ -204,13 +200,14 @@ public class TemplateView extends JFrame {
 		btnOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				final JFileChooser fc = new JFileChooser();
+				final JFileChooser fc = new JFileChooser(path);
 				fc.addChoosableFileFilter(Controller.getFileFilter(2));
 				fc.setAcceptAllFileFilterUsed(false);
 				int returnVal = fc.showOpenDialog(TemplateView.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
+					file = fc.getSelectedFile();
+					path = file.getAbsolutePath();
 					filePathField.setText(file.getAbsolutePath());
 					try {
 						editorPane.read(new FileReader(file), file);
@@ -235,54 +232,25 @@ public class TemplateView extends JFrame {
 
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (file == null) {
+					final JFileChooser fc = new JFileChooser(path);
+					fc.addChoosableFileFilter(Controller.getFileFilter(2));
+					fc.setAcceptAllFileFilterUsed(false);
+					int returnVal = fc.showSaveDialog(TemplateView.this);
 
-				final JFileChooser fc = new JFileChooser();
-				fc.addChoosableFileFilter(Controller.getFileFilter(2));
-				fc.setAcceptAllFileFilterUsed(false);
-				int returnVal = fc.showSaveDialog(TemplateView.this);
-
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					FileWriter fw;
-					try {
-						fw = new FileWriter(file + ".xml");
-						fw.write(editorPane.getText());
-						fw.close();
-					} catch (IOException e1) {
-						JOptionPane.showConfirmDialog(TemplateView.this, "Error ao salvar arquivo.");
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						Controller.writeFile(file, editorPane.getText().getBytes(), TemplateView.this);
 					}
+				} else {
+					Controller.writeFile(file, editorPane.getText().getBytes(), TemplateView.this);
 				}
 			}
 		});
 
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Record recTable;
-				Record recColumn = new Record();
-				for (Table t : scripts) {
-					recTable = new Record();
-					recTable.getField("table", true).setValue(t.getTabela());
-					for (Column c : t.getColumns()) {
-						if (c.isPrimaryKey()) {
-							recTable.getField("primaryKey", true).setValue(c.getName());
-						} else {
-							recColumn = new Record();
-							recColumn.getField("attribute", true).setValue(c.getName());
-							recColumn.getField("typeAttribute", true).setValue(c.getType());
-						}
-					}
-					MemoryReader reader = new MemoryReader(new RecordList(recTable, recColumn));
-					
-					TemplateWriter writer = null;
-					try {
-						writer = new TemplateWriter(new FileWriter("texte.xml"));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-			        writer.setFieldNamesInFirstRow(false);
-			        writer.setDetailTemplate("WriteAnXmlFileUsingFreeMarkerTemplates-detail.xml");
-			        Job.run(reader, writer);
-				}
+
 			}
 		});
 	}

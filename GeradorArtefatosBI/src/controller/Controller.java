@@ -1,9 +1,11 @@
 package controller;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Connection;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import objects.Column;
@@ -178,6 +181,22 @@ public class Controller {
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void writeFile(File file, byte data[], Component component) {
+		FileOutputStream out;
+		boolean error = false;
+		try {
+			out = new FileOutputStream(file);
+			out.write(data);
+			out.close();
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(component, "Error ao salvar arquivo.");
+			error = true;
+		}
+		if (!error) {
+			JOptionPane.showMessageDialog(component, "Arquivo salvo com sucesso!");
 		}
 	}
 
