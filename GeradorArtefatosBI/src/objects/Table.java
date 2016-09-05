@@ -7,10 +7,35 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Table implements Serializable {
 
-	private String tabela = "";
+	private String name = "";
 	private String schema = "";
+	private String primaryKey = "";
 	private boolean isCube = false;
 	private List<Column> columns = new ArrayList<>();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSchema() {
+		return schema;
+	}
+
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+
+	public String getPrimaryKey() {
+		return primaryKey;
+	}
+
+	public void setPrimaryKey(String primaryKey) {
+		this.primaryKey = primaryKey;
+	}
 
 	public boolean isCube() {
 		return isCube;
@@ -24,12 +49,12 @@ public class Table implements Serializable {
 		return columns;
 	}
 
-	public Column getColumn(int index) {
-		return columns.get(index);
-	}
-
 	public void setColumns(List<Column> columns) {
 		this.columns = columns;
+	}
+
+	public Column getColumn(int index) {
+		return columns.get(index);
 	}
 
 	public void setColumn(Column column) {
@@ -40,24 +65,8 @@ public class Table implements Serializable {
 		columns.remove(index);
 	}
 
-	public String getTabela() {
-		return tabela;
-	}
-
-	public void setTabela(String tabela) {
-		this.tabela = tabela;
-	}
-
-	public String getSchema() {
-		return schema;
-	}
-
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
-
 	@Override
 	public String toString() {
-		return tabela;
+		return name;
 	}
 }

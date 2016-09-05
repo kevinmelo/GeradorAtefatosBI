@@ -33,7 +33,6 @@ import javax.swing.SwingConstants;
 public class ConexaoView extends JDialog {
 
 	private List<ConexaoDB> bancoDadosList = new ArrayList<>();
-	private Controller controller = new Controller();
 	private JPanel contentPane;
 	private JTextField nomeText;
 	private JTextField jdbcDriveText;
@@ -250,7 +249,7 @@ public class ConexaoView extends JDialog {
 					bd.setUsuario(usuarioText.getText());
 					bd.setSenha(String.valueOf(senhaText.getPassword()));
 
-					if (controller.validaConexao(bd)) {
+					if (Controller.validaConexao(bd)) {
 						if (selectIndex == -1) {
 							JOptionPane.showMessageDialog(null, "Conexão banco salvo com sucesso!");
 							bancoDadosList.add(bd);
@@ -259,7 +258,7 @@ public class ConexaoView extends JDialog {
 							bancoDadosList.set(selectIndex, bd);
 						}
 
-						controller.escreveArquivo(bancoDadosList);
+						Controller.escreveArquivo(bancoDadosList);
 						atualizaComboBox();
 					} else {
 						JOptionPane.showMessageDialog(null, "Não foi possivel conectar com o banco!");
@@ -331,7 +330,7 @@ public class ConexaoView extends JDialog {
 				btnDelete.setEnabled(false);
 				btnConcluir.setEnabled(false);
 
-				controller.escreveArquivo(bancoDadosList);
+				Controller.escreveArquivo(bancoDadosList);
 				atualizaComboBox();
 			}
 		});
@@ -347,7 +346,7 @@ public class ConexaoView extends JDialog {
 					bd.setUsuario(usuarioText.getText());
 					bd.setSenha(String.valueOf(senhaText.getPassword()));
 
-					if (controller.validaConexao(bd)) {
+					if (Controller.validaConexao(bd)) {
 						if (selectIndex == -1) {
 							JOptionPane.showMessageDialog(null, "Conexão banco salvo com sucesso!");
 							bancoDadosList.add(bd);
@@ -356,7 +355,7 @@ public class ConexaoView extends JDialog {
 							bancoDadosList.set(selectIndex, bd);
 						}
 
-						controller.escreveArquivo(bancoDadosList);
+						Controller.escreveArquivo(bancoDadosList);
 						atualizaComboBox();
 					} else {
 						JOptionPane.showMessageDialog(null, "Não foi possivel conectar com o banco!");

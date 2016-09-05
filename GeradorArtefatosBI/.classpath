@@ -5,5 +5,7 @@
 	<classpathentry kind="lib" path="C:/Users/kevin.melo/EclipseProjects/GeradorArtefatosBI/lib/postgresql-9.4.1209.jre6.jar"/>
 	<classpathentry kind="lib" path="C:/Users/kevin.melo/EclipseProjects/GeradorArtefatosBI/lib/bounce-0.18.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DOM"/>
+	<classpathentry kind="lib" path="C:/Users/kevin.melo/EclipseProjects/GeradorArtefatosBI/lib/velocity-1.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kevin.melo/EclipseProjects/GeradorArtefatosBI/lib/velocity-1.7-dep.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

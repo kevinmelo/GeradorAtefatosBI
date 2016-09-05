@@ -28,7 +28,7 @@ public class ListRender extends JLabel implements ListCellRenderer<Object> {
 
 		if (value instanceof Table) {
 			Table table = (Table) value;
-			setText(table.getTabela());
+			setText(table.getName());
 
 			if (isSelected) {
 				setBackground(PICTON_BLUE);

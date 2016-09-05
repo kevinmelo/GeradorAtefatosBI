@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -15,11 +17,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
 import objects.Column;
 import objects.ConexaoDB;
@@ -30,7 +38,7 @@ public class Controller {
 	private static final String CAMINHO_RESOURCES = "src" + File.separator + "resources";
 	private static final String FILE_CONNECTION = "conexão.data";
 
-	public boolean validaConexao(ConexaoDB bd) {
+	public static boolean validaConexao(ConexaoDB bd) {
 		try {
 			Class.forName(bd.getJdbcDrive());
 		} catch (ClassNotFoundException e) {
@@ -44,7 +52,7 @@ public class Controller {
 		return true;
 	}
 
-	public void escreveArquivo(List<ConexaoDB> obj) {
+	public static void escreveArquivo(List<ConexaoDB> obj) {
 		FileOutputStream fout;
 		ObjectOutputStream oout;
 		try {
@@ -134,11 +142,11 @@ public class Controller {
 			String lines = scanner.nextLine();
 			if (lines.startsWith("CREATE TABLE")) {
 				StringTokenizer st1 = new StringTokenizer(lines, "(");
-				if (!script.getTabela().isEmpty()) {
+				if (!script.getName().isEmpty()) {
 					scripts.add(script);
 					script = new Table();
 				}
-				script.setTabela(st1.nextToken().substring(13));
+				script.setName(st1.nextToken().substring(13));
 			}
 
 			st = new StringTokenizer(lines);
@@ -164,21 +172,31 @@ public class Controller {
 
 			while (res.next()) {
 				Table script = new Table();
-				script.setTabela(res.getString("TABLE_NAME"));
+				script.setName(res.getString("TABLE_NAME"));
 				script.setSchema(res.getString("TABLE_SCHEM"));
 				scripts.add(script);
 			}
 			res.close();
 
 			for (Table s : scripts) {
-				res = meta.getColumns(null, s.getSchema(), s.getTabela(), null);
+				res = meta.getColumns(null, s.getSchema(), s.getName(), null);
 				while (res.next()) {
 					Column column = new Column();
 					column.setName(res.getString("COLUMN_NAME"));
 					column.setType(res.getString("TYPE_NAME"));
 					s.setColumn(column);
 				}
+				res = meta.getPrimaryKeys(null, s.getSchema(), s.getName());
+				while (res.next()) {
+					s.setPrimaryKey(res.getString("COLUMN_NAME"));
+					for (Column c : s.getColumns()) {
+						if (c.getName().equals(s.getPrimaryKey())) {
+							c.setPrimaryKey(true);
+						}
+					}
+				}
 			}
+			res.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -200,4 +218,36 @@ public class Controller {
 		}
 	}
 
+	public static void createSchema(File file, List<Table> tables) {
+
+		Properties p = new Properties();
+		p.setProperty("file.resource.loader.path", file.getParent());
+
+		VelocityEngine ve = new VelocityEngine();
+		ve.init(p);
+
+		Template template = ve.getTemplate(file.getName());
+
+		VelocityContext context = new VelocityContext();
+		context.put("tables", tables);
+
+		StringWriter writer = new StringWriter();
+
+		template.merge(context, writer);
+
+		JFileChooser f = new JFileChooser();
+		f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnVal = f.showSaveDialog(null);
+
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			try {
+				FileWriter fw = new FileWriter(f.getSelectedFile());
+				fw.write(writer.toString());
+				fw.close();
+				JOptionPane.showMessageDialog(null, "Schema Create!");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

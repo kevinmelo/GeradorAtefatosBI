@@ -14,7 +14,6 @@ import org.bounce.text.xml.XMLFoldingMargin;
 import org.bounce.text.xml.XMLStyleConstants;
 
 import controller.Controller;
-import objects.Column;
 import objects.Table;
 
 import javax.swing.GroupLayout;
@@ -34,7 +33,6 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class TemplateView extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnBack;
-	private JButton btnNext;
+	private JButton btnGenerate;
 	private JEditorPane editorPane;
 	private JTextField filePathField;
 	private JButton btnOpen;
@@ -103,9 +101,9 @@ public class TemplateView extends JFrame {
 
 		JSeparator separator = new JSeparator();
 
-		btnNext = new JButton("Avan\u00E7ar");
-		btnNext.setPreferredSize(new Dimension(90, 23));
-		btnNext.setMinimumSize(new Dimension(90, 23));
+		btnGenerate = new JButton("Gerar Schema");
+		btnGenerate.setPreferredSize(new Dimension(90, 23));
+		btnGenerate.setMinimumSize(new Dimension(90, 23));
 
 		btnBack = new JButton("Voltar");
 		btnBack.setPreferredSize(new Dimension(90, 23));
@@ -125,45 +123,48 @@ public class TemplateView extends JFrame {
 		btnSave.setMinimumSize(new Dimension(90, 23));
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-								.createSequentialGroup().addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnBack, GroupLayout.PREFERRED_SIZE,
-														GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
-												.addComponent(btnNext, GroupLayout.PREFERRED_SIZE,
-														GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addComponent(separator, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
-										.addGroup(gl_contentPane.createSequentialGroup().addComponent(btnOpen)
-												.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(
-														filePathField, GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)))
-								.addContainerGap())
-						.addGroup(Alignment.TRAILING,
-								gl_contentPane
-										.createSequentialGroup().addGap(162).addComponent(btnSave,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addGap(162)))));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(btnOpen).addComponent(
-						filePathField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.PREFERRED_SIZE))
-				.addGap(10).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-				.addGap(12)
-				.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE))
-				.addContainerGap()));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+								.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+									.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 208, Short.MAX_VALUE)
+									.addComponent(btnGenerate, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+								.addComponent(separator, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(btnOpen)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(filePathField, GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)))
+							.addContainerGap())
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(162)
+							.addComponent(btnSave, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGap(162))))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnOpen)
+						.addComponent(filePathField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(12)
+					.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnGenerate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
+		);
 
 		XMLEditorKit kit = new XMLEditorKit();
 		kit.setAutoIndentation(true);
@@ -248,9 +249,9 @@ public class TemplateView extends JFrame {
 			}
 		});
 
-		btnNext.addActionListener(new ActionListener() {
+		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				Controller.createSchema(file, scripts);
 			}
 		});
 	}

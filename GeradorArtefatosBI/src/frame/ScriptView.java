@@ -242,7 +242,6 @@ public class ScriptView extends JFrame {
 	private void createEvents() {
 		btnProcurar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				final JFileChooser fc = new JFileChooser();
 				fc.addChoosableFileFilter(Controller.getFileFilter(1));
 				fc.setAcceptAllFileFilterUsed(false);
@@ -341,13 +340,27 @@ public class ScriptView extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Table table = tableList.getSelectedValue();
 				Column column = columnList.getSelectedValue();
+
 				if (column.isPrimaryKey()) {
+					table.setPrimaryKey("");
 					column.setPrimaryKey(false);
 				} else {
-					column.setPrimaryKey(true);
+					for (Column c : table.getColumns()) {
+						if (c.isPrimaryKey()) {
+							if (c.getName().equals(column.getName())) {
+								table.setPrimaryKey("");
+								column.setPrimaryKey(false);
+							} else {
+								c.setPrimaryKey(false);
+							}
+						}
+						table.setPrimaryKey(column.getName());
+						column.setPrimaryKey(true);
+						column.setMeasure(false);
+					}
 				}
-				column.setMeasure(false);
 				columnList.repaint();
 			}
 		});
