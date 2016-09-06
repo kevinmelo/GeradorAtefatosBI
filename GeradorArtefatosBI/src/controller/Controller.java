@@ -31,6 +31,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import objects.Column;
 import objects.ConexaoDB;
+import objects.Schema;
 import objects.Table;
 
 public class Controller {
@@ -219,6 +220,15 @@ public class Controller {
 	}
 
 	public static void createSchema(File file, List<Table> tables) {
+		Schema schema = new Schema();
+		schema.setTables(new ArrayList<>(tables));
+		for (Table t : tables) {
+			if (t.isCube()) {
+				schema.addCube(t);
+			} else {
+				schema.addDimension(t);
+			}
+		}
 
 		Properties p = new Properties();
 		p.setProperty("file.resource.loader.path", file.getParent());
@@ -229,14 +239,13 @@ public class Controller {
 		Template template = ve.getTemplate(file.getName());
 
 		VelocityContext context = new VelocityContext();
-		context.put("tables", tables);
+		context.put("schema", schema);
 
 		StringWriter writer = new StringWriter();
 
 		template.merge(context, writer);
 
 		JFileChooser f = new JFileChooser();
-		f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int returnVal = f.showSaveDialog(null);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
