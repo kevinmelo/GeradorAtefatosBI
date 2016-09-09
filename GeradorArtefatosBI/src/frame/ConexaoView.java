@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controller.Controller;
+import controller.FileCTR;
 import objects.ConexaoDB;
 
 import javax.swing.JButton;
@@ -74,7 +74,7 @@ public class ConexaoView extends JDialog {
 	@SuppressWarnings("unchecked")
 	public ConexaoView() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ConexaoView.class.getResource("/resources/univali.png")));
-		bancoDadosList = (List<ConexaoDB>) Controller.lerArquivo(1);
+		bancoDadosList = (List<ConexaoDB>) FileCTR.readFile(1);
 		conexaoView = this;
 		initComponents();
 		createEvents();
@@ -249,7 +249,7 @@ public class ConexaoView extends JDialog {
 					bd.setUsuario(usuarioText.getText());
 					bd.setSenha(String.valueOf(senhaText.getPassword()));
 
-					if (Controller.validaConexao(bd)) {
+					if (FileCTR.connectionIsValid(bd)) {
 						if (selectIndex == -1) {
 							JOptionPane.showMessageDialog(null, "Conexão banco salvo com sucesso!");
 							bancoDadosList.add(bd);
@@ -258,7 +258,7 @@ public class ConexaoView extends JDialog {
 							bancoDadosList.set(selectIndex, bd);
 						}
 
-						Controller.escreveArquivo(bancoDadosList);
+						FileCTR.writeFile(bancoDadosList);
 						atualizaComboBox();
 					} else {
 						JOptionPane.showMessageDialog(null, "Não foi possivel conectar com o banco!");
@@ -330,7 +330,7 @@ public class ConexaoView extends JDialog {
 				btnDelete.setEnabled(false);
 				btnConcluir.setEnabled(false);
 
-				Controller.escreveArquivo(bancoDadosList);
+				FileCTR.writeFile(bancoDadosList);
 				atualizaComboBox();
 			}
 		});
@@ -346,7 +346,7 @@ public class ConexaoView extends JDialog {
 					bd.setUsuario(usuarioText.getText());
 					bd.setSenha(String.valueOf(senhaText.getPassword()));
 
-					if (Controller.validaConexao(bd)) {
+					if (FileCTR.connectionIsValid(bd)) {
 						if (selectIndex == -1) {
 							JOptionPane.showMessageDialog(null, "Conexão banco salvo com sucesso!");
 							bancoDadosList.add(bd);
@@ -355,7 +355,7 @@ public class ConexaoView extends JDialog {
 							bancoDadosList.set(selectIndex, bd);
 						}
 
-						Controller.escreveArquivo(bancoDadosList);
+						FileCTR.writeFile(bancoDadosList);
 						atualizaComboBox();
 					} else {
 						JOptionPane.showMessageDialog(null, "Não foi possivel conectar com o banco!");

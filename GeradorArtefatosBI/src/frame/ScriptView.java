@@ -9,7 +9,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-import controller.Controller;
+import controller.DataBaseCTR;
+import controller.FileCTR;
 import objects.Column;
 import objects.ConexaoDB;
 import objects.ListRender;
@@ -243,14 +244,14 @@ public class ScriptView extends JFrame {
 		btnProcurar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
-				fc.addChoosableFileFilter(Controller.getFileFilter(1));
+				fc.addChoosableFileFilter(FileCTR.getFileFilter(1));
 				fc.setAcceptAllFileFilterUsed(false);
 				int returnVal = fc.showOpenDialog(ScriptView.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
 					filePathField.setText(file.getAbsolutePath());
-					Controller.readSqlFile(file, scripts);
+					FileCTR.readSqlFile(file, scripts);
 					tableModel = new DefaultListModel<>();
 					updateTableList();
 				} else {
@@ -263,8 +264,10 @@ public class ScriptView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (comboBox.getSelectedIndex() != -1 && !isUpdating) {
 					ConexaoDB bd = (ConexaoDB) comboBox.getSelectedItem();
-					Controller.readDataBase(bd, scripts);
-					updateTableList();
+					new Thread(() -> {
+						DataBaseCTR.readDataBase(bd, scripts);
+						updateTableList();
+					}).start();
 				}
 			}
 		});
@@ -416,7 +419,7 @@ public class ScriptView extends JFrame {
 
 	@SuppressWarnings("unchecked")
 	private void updateComboBox() {
-		bancoDadosList = (List<ConexaoDB>) Controller.lerArquivo(1);
+		bancoDadosList = (List<ConexaoDB>) FileCTR.readFile(1);
 		comboBox.removeAllItems();
 		isUpdating = true;
 		for (ConexaoDB bd : bancoDadosList) {

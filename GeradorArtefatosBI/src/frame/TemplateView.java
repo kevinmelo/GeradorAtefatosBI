@@ -13,7 +13,7 @@ import org.bounce.text.xml.XMLEditorKit;
 import org.bounce.text.xml.XMLFoldingMargin;
 import org.bounce.text.xml.XMLStyleConstants;
 
-import controller.Controller;
+import controller.FileCTR;
 import objects.Table;
 
 import javax.swing.GroupLayout;
@@ -202,7 +202,7 @@ public class TemplateView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				final JFileChooser fc = new JFileChooser(path);
-				fc.addChoosableFileFilter(Controller.getFileFilter(2));
+				fc.addChoosableFileFilter(FileCTR.getFileFilter(2));
 				fc.setAcceptAllFileFilterUsed(false);
 				int returnVal = fc.showOpenDialog(TemplateView.this);
 
@@ -235,23 +235,23 @@ public class TemplateView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (file == null) {
 					final JFileChooser fc = new JFileChooser(path);
-					fc.addChoosableFileFilter(Controller.getFileFilter(2));
+					fc.addChoosableFileFilter(FileCTR.getFileFilter(2));
 					fc.setAcceptAllFileFilterUsed(false);
 					int returnVal = fc.showSaveDialog(TemplateView.this);
 
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
-						Controller.writeFile(file, editorPane.getText().getBytes(), TemplateView.this);
+						FileCTR.writeFile(file, editorPane.getText().getBytes(), TemplateView.this);
 					}
 				} else {
-					Controller.writeFile(file, editorPane.getText().getBytes(), TemplateView.this);
+					FileCTR.writeFile(file, editorPane.getText().getBytes(), TemplateView.this);
 				}
 			}
 		});
 
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Controller.createSchema(file, scripts);
+				FileCTR.createSchema(file, scripts);
 			}
 		});
 	}

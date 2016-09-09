@@ -12,12 +12,13 @@ import javax.swing.ListCellRenderer;
 public class ListRender extends JLabel implements ListCellRenderer<Object> {
 
 	private static final Color PICTON_BLUE = new Color(89, 171, 227);
-	private static final Color LIGHTNING_YELLOW = new Color(245, 171, 53);
 	private static final Color WHITE = new Color(255, 255, 255);
 	private static final Color BLACK = new Color(0, 0, 0);
-	private static final Color OLD_BRICK = new Color(150, 40, 27);
-	private static final Color PLUM = new Color(145, 61, 136);
-	private static final Color SALEM = new Color(30, 130, 76);
+
+	private static final Color CUBE = new Color(190, 144, 212);
+	private static final Color PRIMARY_KEY = new Color(30, 139, 195);
+	private static final Color MEASURE = new Color(30, 130, 76);
+	private static final Color FOREIGN_KEY = new Color(210, 77, 87);
 
 	@Override
 	public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index,
@@ -29,18 +30,13 @@ public class ListRender extends JLabel implements ListCellRenderer<Object> {
 		if (value instanceof Table) {
 			Table table = (Table) value;
 			setText(table.getName());
-
 			if (isSelected) {
 				setBackground(PICTON_BLUE);
-				if (table.isCube()) {
-					setForeground(LIGHTNING_YELLOW);
-				} else {
-					setForeground(list.getSelectionForeground());
-				}
+				setForeground(list.getSelectionForeground());
 			} else {
 				setBackground(WHITE);
 				if (table.isCube()) {
-					setForeground(OLD_BRICK);
+					setForeground(CUBE);
 				} else {
 					setForeground(BLACK);
 				}
@@ -50,20 +46,15 @@ public class ListRender extends JLabel implements ListCellRenderer<Object> {
 			setText(column.getName());
 			if (isSelected) {
 				setBackground(PICTON_BLUE);
-				if (column.isMeasure()) {
-					setForeground(PLUM);
-				} else if (column.isPrimaryKey()) {
-					setForeground(LIGHTNING_YELLOW);
-				} else {
-					setForeground(list.getSelectionForeground());
-				}
-
+				setForeground(list.getSelectionForeground());
 			} else {
 				setBackground(WHITE);
 				if (column.isMeasure()) {
-					setForeground(SALEM);
+					setForeground(MEASURE);
 				} else if (column.isPrimaryKey()) {
-					setForeground(OLD_BRICK);
+					setForeground(PRIMARY_KEY);
+				} else if (column.isForeignKey()) {
+					setForeground(FOREIGN_KEY);
 				} else {
 					setForeground(BLACK);
 				}

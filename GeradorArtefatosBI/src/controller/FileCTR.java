@@ -10,10 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +31,12 @@ import objects.ConexaoDB;
 import objects.Schema;
 import objects.Table;
 
-public class Controller {
+public class FileCTR {
 
 	private static final String CAMINHO_RESOURCES = "src" + File.separator + "resources";
 	private static final String FILE_CONNECTION = "conexão.data";
 
-	public static boolean validaConexao(ConexaoDB bd) {
+	public static boolean connectionIsValid(ConexaoDB bd) {
 		try {
 			Class.forName(bd.getJdbcDrive());
 		} catch (ClassNotFoundException e) {
@@ -53,7 +50,7 @@ public class Controller {
 		return true;
 	}
 
-	public static void escreveArquivo(List<ConexaoDB> obj) {
+	public static void writeFile(List<ConexaoDB> obj) {
 		FileOutputStream fout;
 		ObjectOutputStream oout;
 		try {
@@ -65,8 +62,24 @@ public class Controller {
 		}
 	}
 
+	public static void writeFile(File file, byte data[], Component component) {
+		FileOutputStream out;
+		boolean error = false;
+		try {
+			out = new FileOutputStream(file);
+			out.write(data);
+			out.close();
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(component, "Error ao salvar arquivo.");
+			error = true;
+		}
+		if (!error) {
+			JOptionPane.showMessageDialog(component, "Arquivo salvo com sucesso!");
+		}
+	}
+
 	@SuppressWarnings({ "resource" })
-	public static Object lerArquivo(int fileIndex) {
+	public static Object readFile(int fileIndex) {
 		FileInputStream fin;
 		ObjectInputStream oin;
 
@@ -106,7 +119,7 @@ public class Controller {
 					return true;
 				}
 
-				String extension = Controller.getExtension(f);
+				String extension = FileCTR.getExtension(f);
 				if (extension != null) {
 					if (extension.equals("sql") || extension.equals("txt") || extension.equals("xml")) {
 						return true;
@@ -164,64 +177,10 @@ public class Controller {
 		}
 	}
 
-	public static void readDataBase(ConexaoDB conexao, List<Table> scripts) {
-		try {
-			Connection con = DriverManager.getConnection(conexao.getJdbcUrl(), conexao.getUsuario(),
-					conexao.getSenha());
-			DatabaseMetaData meta = con.getMetaData();
-			ResultSet res = meta.getTables(null, con.getSchema(), null, new String[] { "TABLE" });
-
-			while (res.next()) {
-				Table script = new Table();
-				script.setName(res.getString("TABLE_NAME"));
-				script.setSchema(res.getString("TABLE_SCHEM"));
-				scripts.add(script);
-			}
-			res.close();
-
-			for (Table s : scripts) {
-				res = meta.getColumns(null, s.getSchema(), s.getName(), null);
-				while (res.next()) {
-					Column column = new Column();
-					column.setName(res.getString("COLUMN_NAME"));
-					column.setType(res.getString("TYPE_NAME"));
-					s.setColumn(column);
-				}
-				res = meta.getPrimaryKeys(null, s.getSchema(), s.getName());
-				while (res.next()) {
-					s.setPrimaryKey(res.getString("COLUMN_NAME"));
-					for (Column c : s.getColumns()) {
-						if (c.getName().equals(s.getPrimaryKey())) {
-							c.setPrimaryKey(true);
-						}
-					}
-				}
-			}
-			res.close();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	public static void writeFile(File file, byte data[], Component component) {
-		FileOutputStream out;
-		boolean error = false;
-		try {
-			out = new FileOutputStream(file);
-			out.write(data);
-			out.close();
-		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(component, "Error ao salvar arquivo.");
-			error = true;
-		}
-		if (!error) {
-			JOptionPane.showMessageDialog(component, "Arquivo salvo com sucesso!");
-		}
-	}
-
 	public static void createSchema(File file, List<Table> tables) {
 		Schema schema = new Schema();
 		schema.setTables(new ArrayList<>(tables));
+
 		for (Table t : tables) {
 			if (t.isCube()) {
 				schema.addCube(t);

@@ -6,6 +6,7 @@ public class Column {
 	private String type = "";
 	private boolean isMeasure = false;
 	private boolean isPrimaryKey = false;
+	private boolean isForeignKey = false;
 
 	public String getName() {
 		return name;
@@ -37,6 +38,14 @@ public class Column {
 
 	public void setPrimaryKey(boolean isPrimaryKey) {
 		this.isPrimaryKey = isPrimaryKey;
+	}
+
+	public boolean isForeignKey() {
+		return isForeignKey;
+	}
+
+	public void setForeignKey(boolean isForeignKey) {
+		this.isForeignKey = isForeignKey;
 	}
 
 	@Override
