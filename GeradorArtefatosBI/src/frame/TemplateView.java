@@ -174,8 +174,8 @@ public class TemplateView extends JFrame {
 
 		editorPane = new JEditorPane();
 		editorPane.setFont(new Font("Consolas", Font.PLAIN, 14));
-		editorPane.setEditorKit(kit);
 		editorPane.getDocument().putProperty(PlainDocument.tabSizeAttribute, 2);
+		editorPane.setEditorKit(kit);
 
 		JPanel rowHeader = new JPanel(new BorderLayout());
 		try {

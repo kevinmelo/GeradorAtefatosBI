@@ -12,8 +12,9 @@ public class Table implements Serializable {
 	private String schema = "";
 	private String primaryKey = "";
 	private boolean isCube = false;
+	private boolean isAggregation = false;
 	private List<Column> columns = new ArrayList<>();
-	private HashMap<String, String> foreignKey = new HashMap<>();
+	private HashMap<String, String> foreignKeys = new HashMap<>();
 
 	public String getName() {
 		return name;
@@ -67,16 +68,34 @@ public class Table implements Serializable {
 		columns.remove(index);
 	}
 
-	public HashMap<String, String> getForeignKey() {
-		return foreignKey;
+	public HashMap<String, String> getForeignKeys() {
+		return foreignKeys;
 	}
 
-	public void setForeignKey(HashMap<String, String> foreignKey) {
-		this.foreignKey = foreignKey;
+	public void setForeignKeys(HashMap<String, String> foreignKeys) {
+		this.foreignKeys = foreignKeys;
 	}
 
 	public void setForeignKey(String foreignTable, String foreignKey) {
-		this.foreignKey.put(foreignTable, foreignKey);
+		this.foreignKeys.put(foreignTable, foreignKey);
+	}
+
+	public ArrayList<Column> getMeasures() {
+		ArrayList<Column> measures = new ArrayList<>();
+		for (Column c : columns) {
+			if (c.isMeasure()) {
+				measures.add(c);
+			}
+		}
+		return measures;
+	}
+
+	public boolean isAggregation() {
+		return isAggregation;
+	}
+
+	public void setAggregation() {
+		this.isAggregation = (isAggregation ? false : true);
 	}
 
 	@Override

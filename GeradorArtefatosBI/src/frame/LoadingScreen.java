@@ -18,7 +18,6 @@ public class LoadingScreen extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JProgressBar progressBar;
-	private int maximum;
 
 	/**
 	 * Launch the application.
@@ -30,7 +29,7 @@ public class LoadingScreen extends JDialog {
 			e.printStackTrace();
 		}
 		try {
-			LoadingScreen dialog = new LoadingScreen(0);
+			LoadingScreen dialog = new LoadingScreen();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -41,8 +40,7 @@ public class LoadingScreen extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public LoadingScreen(int maximum) {
-		this.maximum = maximum;
+	public LoadingScreen() {
 		initComponents();
 	}
 
@@ -57,9 +55,8 @@ public class LoadingScreen extends JDialog {
 		JLabel lblLendoDadosDo = new JLabel("Lendo dados do banco....");
 
 		progressBar = new JProgressBar();
-		progressBar.setMaximum(maximum);
-		progressBar.setMinimum(0);
-		
+		progressBar.setIndeterminate(true);
+
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPanel.createSequentialGroup().addContainerGap()
@@ -77,7 +74,13 @@ public class LoadingScreen extends JDialog {
 		contentPanel.setLayout(gl_contentPanel);
 	}
 	
-	public void setProgressBarValue(int value){
+	public void setMaximum(int maximum) {
+		progressBar.setIndeterminate(false);
+		progressBar.setMaximum(maximum);
+		progressBar.setMinimum(0);
+	}
+
+	public void setProgressBarValue(int value) {
 		progressBar.setValue(value);
 	}
 }

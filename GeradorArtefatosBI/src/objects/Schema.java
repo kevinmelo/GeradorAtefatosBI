@@ -7,6 +7,7 @@ public class Schema {
 	private ArrayList<Table> tables = new ArrayList<>();
 	private ArrayList<Table> dimensions = new ArrayList<>();
 	private ArrayList<Table> cubes = new ArrayList<>();
+	private ArrayList<Table> aggregations = new ArrayList<>();
 
 	public ArrayList<Table> getTables() {
 		return tables;
@@ -32,12 +33,24 @@ public class Schema {
 		this.cubes = cubes;
 	}
 
+	public ArrayList<Table> getAggregations() {
+		return aggregations;
+	}
+
+	public void setAggregations(ArrayList<Table> aggregations) {
+		this.aggregations = aggregations;
+	}
+
 	public void addDimension(Table dimension) {
 		dimensions.add(dimension);
 	}
 
 	public void addCube(Table cube) {
 		cubes.add(cube);
+	}
+
+	public void addAggregator(Table aggregator) {
+		aggregations.add(aggregator);
 	}
 
 }

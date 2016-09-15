@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.DataBaseCTR;
 import controller.FileCTR;
 import objects.ConexaoDB;
 
@@ -249,7 +250,7 @@ public class ConexaoView extends JDialog {
 					bd.setUsuario(usuarioText.getText());
 					bd.setSenha(String.valueOf(senhaText.getPassword()));
 
-					if (FileCTR.connectionIsValid(bd)) {
+					if (DataBaseCTR.connectionIsValid(bd)) {
 						if (selectIndex == -1) {
 							JOptionPane.showMessageDialog(null, "Conexão banco salvo com sucesso!");
 							bancoDadosList.add(bd);
@@ -260,8 +261,6 @@ public class ConexaoView extends JDialog {
 
 						FileCTR.writeFile(bancoDadosList);
 						atualizaComboBox();
-					} else {
-						JOptionPane.showMessageDialog(null, "Não foi possivel conectar com o banco!");
 					}
 				}
 			}
@@ -346,7 +345,7 @@ public class ConexaoView extends JDialog {
 					bd.setUsuario(usuarioText.getText());
 					bd.setSenha(String.valueOf(senhaText.getPassword()));
 
-					if (FileCTR.connectionIsValid(bd)) {
+					if (DataBaseCTR.connectionIsValid(bd)) {
 						if (selectIndex == -1) {
 							JOptionPane.showMessageDialog(null, "Conexão banco salvo com sucesso!");
 							bancoDadosList.add(bd);
@@ -357,8 +356,6 @@ public class ConexaoView extends JDialog {
 
 						FileCTR.writeFile(bancoDadosList);
 						atualizaComboBox();
-					} else {
-						JOptionPane.showMessageDialog(null, "Não foi possivel conectar com o banco!");
 					}
 				}
 				conexaoView.dispose();

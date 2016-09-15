@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import frame.LoadingScreen;
 import objects.Column;
 import objects.ConexaoDB;
@@ -16,37 +18,60 @@ public class DataBaseCTR {
 
 	private static int i = 1;
 
-	public static void readDataBase(ConexaoDB conexao, List<Table> scripts) {
+	public static boolean connectionIsValid(ConexaoDB bd) {
 		try {
-			Connection con = DriverManager.getConnection(conexao.getJdbcUrl(), conexao.getUsuario(),
-					conexao.getSenha());
-			DatabaseMetaData meta = con.getMetaData();
-			ResultSet res = meta.getTables(null, con.getSchema(), null, new String[] { "TABLE" });
-			LoadingScreen loading;
-
-			while (res.next()) {
-				Table script = new Table();
-				script.setName(res.getString("TABLE_NAME"));
-				script.setSchema(res.getString("TABLE_SCHEM"));
-				scripts.add(script);
-			}
-			res.close();
-
-			loading = new LoadingScreen(scripts.size());
-			loading.setVisible(true);
-			i = 1;
-
-			for (Table s : scripts) {
-				getTableColumns(meta, s);
-				getTablePrimaryKeys(meta, s);
-				getTableForeignKeys(meta, s);
-				loading.setProgressBarValue(i);
-				i++;
-			}
-			loading.dispose();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			Class.forName(bd.getJdbcDrive());
+		} catch (ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "JDBCDriver não encontrado!");
+			return false;
 		}
+		try {
+			DriverManager.getConnection(bd.getJdbcUrl(), bd.getUsuario(), bd.getSenha());
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	public static void readDataBase(ConexaoDB conexao, List<Table> scripts) {
+		Connection con = null;
+		LoadingScreen loading = new LoadingScreen();
+		loading.setVisible(true);
+		try {
+			con = DriverManager.getConnection(conexao.getJdbcUrl(), conexao.getUsuario(), conexao.getSenha());
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+
+		if (con != null) {
+			try {
+				DatabaseMetaData meta = con.getMetaData();
+				ResultSet res = meta.getTables(null, con.getSchema(), null, new String[] { "TABLE" });
+
+				while (res.next()) {
+					Table script = new Table();
+					script.setName(res.getString("TABLE_NAME"));
+					script.setSchema(res.getString("TABLE_SCHEM"));
+					scripts.add(script);
+				}
+				res.close();
+
+				loading.setMaximum(scripts.size());
+				i = 1;
+
+				for (Table s : scripts) {
+					getTableColumns(meta, s);
+					getTablePrimaryKeys(meta, s);
+					getTableForeignKeys(meta, s);
+					loading.setProgressBarValue(i);
+					i++;
+				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			}
+		}
+		loading.dispose();
 	}
 
 	private static void getTableColumns(DatabaseMetaData meta, Table t) {

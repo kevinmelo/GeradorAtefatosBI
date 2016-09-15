@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringWriter;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -35,20 +33,6 @@ public class FileCTR {
 
 	private static final String CAMINHO_RESOURCES = "src" + File.separator + "resources";
 	private static final String FILE_CONNECTION = "conexão.data";
-
-	public static boolean connectionIsValid(ConexaoDB bd) {
-		try {
-			Class.forName(bd.getJdbcDrive());
-		} catch (ClassNotFoundException e) {
-			return false;
-		}
-		try {
-			DriverManager.getConnection(bd.getJdbcUrl(), bd.getUsuario(), bd.getSenha());
-		} catch (SQLException e) {
-			return false;
-		}
-		return true;
-	}
 
 	public static void writeFile(List<ConexaoDB> obj) {
 		FileOutputStream fout;
@@ -184,6 +168,8 @@ public class FileCTR {
 		for (Table t : tables) {
 			if (t.isCube()) {
 				schema.addCube(t);
+			} else if (t.isAggregation()) {
+				schema.addAggregator(t);
 			} else {
 				schema.addDimension(t);
 			}

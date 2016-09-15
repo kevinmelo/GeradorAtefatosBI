@@ -62,6 +62,7 @@ public class ScriptView extends JFrame {
 
 	private JPopupMenu tablePopupMenu = new JPopupMenu();
 	private JRadioButtonMenuItem cubeMenuItem = new JRadioButtonMenuItem("Cubo");
+	private JRadioButtonMenuItem aggregationMenuItem = new JRadioButtonMenuItem("Aggregação");
 	private JMenuItem removeTableMenuItem = new JMenuItem("Remover");
 
 	private JPopupMenu columnPopupMenu = new JPopupMenu();
@@ -218,6 +219,7 @@ public class ScriptView extends JFrame {
 		panel.setLayout(gl_panel);
 
 		tablePopupMenu.add(cubeMenuItem);
+		tablePopupMenu.add(aggregationMenuItem);
 		tablePopupMenu.add(removeTableMenuItem);
 
 		JScrollPane tabelaScrollPane = new JScrollPane();
@@ -293,6 +295,11 @@ public class ScriptView extends JFrame {
 						} else {
 							cubeMenuItem.setSelected(false);
 						}
+						if(tableList.getSelectedValue().isAggregation()) {
+							aggregationMenuItem.setSelected(true);
+						} else {
+							aggregationMenuItem.setSelected(false);
+						}
 					}
 					selectedTableIndex = tableList.getSelectedIndex();
 					updateColumnList();
@@ -304,7 +311,13 @@ public class ScriptView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tableList.getSelectedValue().setCube();
-				tableList.repaint();
+			}
+		});
+		
+		aggregationMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tableList.getSelectedValue().setAggregation();
 			}
 		});
 

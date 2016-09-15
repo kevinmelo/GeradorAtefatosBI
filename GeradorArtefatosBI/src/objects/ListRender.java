@@ -16,6 +16,7 @@ public class ListRender extends JLabel implements ListCellRenderer<Object> {
 	private static final Color BLACK = new Color(0, 0, 0);
 
 	private static final Color CUBE = new Color(190, 144, 212);
+	private static final Color AGGREGATOR = new Color(220, 220, 30);
 	private static final Color PRIMARY_KEY = new Color(30, 139, 195);
 	private static final Color MEASURE = new Color(30, 130, 76);
 	private static final Color FOREIGN_KEY = new Color(210, 77, 87);
@@ -37,6 +38,8 @@ public class ListRender extends JLabel implements ListCellRenderer<Object> {
 				setBackground(WHITE);
 				if (table.isCube()) {
 					setForeground(CUBE);
+				} else if (table.isAggregation()) {
+					setForeground(AGGREGATOR);
 				} else {
 					setForeground(BLACK);
 				}
