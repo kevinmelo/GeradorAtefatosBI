@@ -154,48 +154,54 @@ public class ScriptView extends JFrame {
 		separator = new JSeparator();
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(separator, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(btnProcurar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(filePathField, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(panel, GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
-								.addGroup(gl_contentPane.createSequentialGroup().addComponent(btnNovaConexo)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(comboBox, 0, 438, Short.MAX_VALUE))
-								.addComponent(separator_1, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
-								.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE))
-						.addContainerGap()));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnProcurar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addComponent(filePathField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(btnNovaConexo)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(separator, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(btnProcurar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(filePathField, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(panel, GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(btnNovaConexo)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(comboBox, 0, 438, Short.MAX_VALUE))
+						.addComponent(separator_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+						.addComponent(btnNext, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnProcurar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(filePathField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnNovaConexo)
 						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 4, GroupLayout.PREFERRED_SIZE)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(6).addComponent(tablePanel,
-								GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
-						.addGroup(gl_contentPane.createSequentialGroup().addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(panel, GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(separator, GroupLayout.PREFERRED_SIZE, 4, GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-				.addContainerGap()));
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 4, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(6)
+							.addComponent(tablePanel, GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(panel, GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 4, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
 
 		columnPopupMenu.add(primaryKeyMenuItem);
 		columnPopupMenu.add(measureMenuItem);
@@ -203,7 +209,7 @@ public class ScriptView extends JFrame {
 
 		JScrollPane colunaScrollPane = new JScrollPane();
 		columnList.setCellRenderer(new ListRender());
-		columnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		columnList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		columnList.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		colunaScrollPane.setViewportView(columnList);
 
@@ -267,6 +273,7 @@ public class ScriptView extends JFrame {
 				if (comboBox.getSelectedIndex() != -1 && !isUpdating) {
 					ConexaoDB bd = (ConexaoDB) comboBox.getSelectedItem();
 					new Thread(() -> {
+						scripts.clear();
 						DataBaseCTR.readDataBase(bd, scripts);
 						updateTableList();
 					}).start();
@@ -295,7 +302,7 @@ public class ScriptView extends JFrame {
 						} else {
 							cubeMenuItem.setSelected(false);
 						}
-						if(tableList.getSelectedValue().isAggregation()) {
+						if (tableList.getSelectedValue().isAggregation()) {
 							aggregationMenuItem.setSelected(true);
 						} else {
 							aggregationMenuItem.setSelected(false);
@@ -313,7 +320,7 @@ public class ScriptView extends JFrame {
 				tableList.getSelectedValue().setCube();
 			}
 		});
-		
+
 		aggregationMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -336,7 +343,6 @@ public class ScriptView extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e) && !columnModel.isEmpty()) {
 					columnPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-					columnList.setSelectedIndex(columnList.locationToIndex(e.getPoint()));
 					if (columnList.getSelectedValue().isMeasure()) {
 						measureMenuItem.setSelected(true);
 					} else {
@@ -384,13 +390,15 @@ public class ScriptView extends JFrame {
 		measureMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Column column = columnList.getSelectedValue();
-				if (column.isMeasure()) {
-					column.setMeasure(false);
-				} else {
-					column.setMeasure(true);
+				List<Column> selectColumns = columnList.getSelectedValuesList();
+				for (Column column : selectColumns) {
+					if (column.isMeasure()) {
+						column.setMeasure(false);
+					} else {
+						column.setMeasure(true);
+					}
+					column.setPrimaryKey(false);
 				}
-				column.setPrimaryKey(false);
 				columnList.repaint();
 			}
 		});

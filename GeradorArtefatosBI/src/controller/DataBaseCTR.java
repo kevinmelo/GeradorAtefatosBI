@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import frame.LoadingScreen;
 import objects.Column;
 import objects.ConexaoDB;
+import objects.ForeignKey;
 import objects.Table;
 
 public class DataBaseCTR {
@@ -115,7 +116,7 @@ public class DataBaseCTR {
 			while (res.next()) {
 				String foreignTable = res.getString("PKTABLE_NAME");
 				String foreignKey = res.getString("FKCOLUMN_NAME");
-				t.setForeignKey(foreignTable, foreignKey);
+				t.setForeignKey(new ForeignKey(foreignTable, foreignKey));
 				for (Column c : t.getColumns()) {
 					if (c.getName().equals(foreignKey)) {
 						c.setForeignKey(true);

@@ -2,7 +2,6 @@ package objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -14,7 +13,7 @@ public class Table implements Serializable {
 	private boolean isCube = false;
 	private boolean isAggregation = false;
 	private List<Column> columns = new ArrayList<>();
-	private HashMap<String, String> foreignKeys = new HashMap<>();
+	private List<ForeignKey> foreignKeys = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -68,16 +67,16 @@ public class Table implements Serializable {
 		columns.remove(index);
 	}
 
-	public HashMap<String, String> getForeignKeys() {
+	public List<ForeignKey> getForeignKeys() {
 		return foreignKeys;
 	}
 
-	public void setForeignKeys(HashMap<String, String> foreignKeys) {
+	public void setForeignKeys(List<ForeignKey> foreignKeys) {
 		this.foreignKeys = foreignKeys;
 	}
 
-	public void setForeignKey(String foreignTable, String foreignKey) {
-		this.foreignKeys.put(foreignTable, foreignKey);
+	public void setForeignKey(ForeignKey foreignKey) {
+		this.foreignKeys.add(foreignKey);		
 	}
 
 	public ArrayList<Column> getMeasures() {
