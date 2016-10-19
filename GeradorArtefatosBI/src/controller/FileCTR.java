@@ -32,6 +32,7 @@ import objects.Table;
 public class FileCTR {
 
 	private static final String CAMINHO_RESOURCES = "src" + File.separator + "resources";
+//	private static final String CAMINHO_RESOURCES = "";
 	private static final String FILE_CONNECTION = "conexão.data";
 
 	public static void writeFile(List<ConexaoDB> obj) {
@@ -148,7 +149,6 @@ public class FileCTR {
 			}
 
 			st = new StringTokenizer(lines);
-
 			if (!lines.equals("") && lines.indexOf("CREATE") == -1 && lines.indexOf("ALTER") == -1
 					&& lines.indexOf("DROP") == -1 && !lines.equals("(") && !lines.equals(");")) {
 				if (lines.startsWith(" ") || !lines.startsWith(" ")) {
@@ -159,6 +159,7 @@ public class FileCTR {
 				}
 			}
 		}
+		scripts.add(script);
 	}
 
 	public static void createSchema(File file, List<Table> tables) {

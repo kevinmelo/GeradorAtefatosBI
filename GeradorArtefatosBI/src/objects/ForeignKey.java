@@ -26,4 +26,13 @@ public class ForeignKey {
 		this.name = foreignKey;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		ForeignKey fk = (ForeignKey) obj;
+		
+		if (fk.getName().equals(this.name) && fk.getTable().equals(this.tableName))
+			return true;
+
+		return false;
+	}
 }
